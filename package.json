@@ -1,0 +1,28 @@
+{
+  "name": "webhosts-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && npm start",
+    "server": "node server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start": "nodemon ./bin/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "font-awesome": "^4.7.0",
+    "http": "0.0.0",
+    "mongoose": "^5.6.1",    
+    "react-router-dom": "^5.0.1"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.1",
+    "nodemon": "^1.19.1"
+  }
+}
