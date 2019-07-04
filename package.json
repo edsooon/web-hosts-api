@@ -18,8 +18,11 @@
     "express": "^4.17.1",
     "font-awesome": "^4.7.0",
     "http": "0.0.0",
-    "mongoose": "^5.6.1",    
-    "react-router-dom": "^5.0.1"
+    "mongoose": "^5.6.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.0.1"
   },
   "devDependencies": {
     "concurrently": "^4.1.1",
