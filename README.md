@@ -1,7 +1,13 @@
-# Infrashop checkout application.
+# Web-hosts-api application.
 
-Copied from:
+## Requirements
 
-https://lab.accurate.com.br/svn/acc/acec/ckout/src/11gR1/trunk
-revision 212452
+* Nodejs lasted version
+* Node Package Manager(npm) lasted version
 
+## Instalation
+
+* Make the clone of this repository (https://github.com/edsooon/web-hosts-api.git) in a directory of your choice
+* Enter the project folder, open a new terminal and enter the command `sudo npm install`  to download the dependencies.
+* After downloading the dependencies, execute the `sudo npm run dev` command to start the application
+* Open your brownser and enter url `localhost:3000`
