@@ -5,7 +5,7 @@ import styles from "./Index.module.css";
 export default class Menu extends Component {
 
   state = { hosts:[], hostsReturn:''};
-  selectedHosts = '';
+  selectedHosts = {"hosts":[]};
    
     async componentDidMount() {    
      
@@ -33,26 +33,45 @@ export default class Menu extends Component {
         return body;
       };
      
+
+
     selectHost(param){
 
-      if(!this.selectedHosts.includes(param)) {
-          this.selectedHosts += this.selectedHosts === "" ? param :  "/".concat(param);
-          console.log(this.selectedHosts);
-      } else {
-        this.selectedHosts = this.selectedHosts.includes("/") ? this.selectedHosts.replace("/".concat(param), "") : this.selectedHosts.replace(param, "");
-        console.log(this.selectedHosts);
+     var exist = false;
+
+     if(this.selectedHosts.hosts.length === 0){
+       this.selectedHosts.hosts.push({"name": param});
+     } else {
+
+      for(var h in this.selectedHosts.hosts){
+                
+        if(this.selectedHosts.hosts[h].name === param){          
+          delete this.selectedHosts.hosts[h];
+          exist = true;
+        } 
       }
+
+      if(!exist){
+        this.selectedHosts.hosts.push({"name": param});
+      }      
+
+     }    
   }
 
   callApiInject = async () => {
 
-    var hostsSelected = this.selectedHosts.replace('/', '&name=');
-    var url = '/hosts/inject'.concat(this.selectedHosts === '' ? '' : "?name=".concat(hostsSelected));        
+    var hostsSelected = '';
+    
+    for(var h in this.selectedHosts.hosts){
+      hostsSelected = hostsSelected.concat(hostsSelected.length === 0 ? 'name='.concat(this.selectedHosts.hosts[h].name) : '&name='.concat(this.selectedHosts.hosts[h].name));
+    }
+    
+    var url = '/hosts/inject?'.concat(hostsSelected);
     const response = await fetch(url);         
     const body = await response.json();
         
-    if (response.status !== 200) throw Error(body.message);
-
+    if (response.status !== 200) throw Error(body.message);       
+   
     this.setState({hostsReturn: body.hostsReturn});
   
   };
@@ -74,7 +93,7 @@ export default class Menu extends Component {
           <div className="row">       
              {this.state.hosts.map((item, key) =>           
                
-               <div className="col-sm"> 
+               <div className="col-sm-3"> 
                   <div className="ui fitted slider checkbox" onClick={()=>this.selectHost(item.name)}>
                      <input id={"radio"+key} type="checkbox" />                   
                      <label></label>
