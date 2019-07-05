@@ -7,6 +7,7 @@ const TITLE_SEPARATOR_LEFT = '#-------------------- '
 const TITLE_SEPARATOR_RIGHT = ' ---------------------'
 const LINE_BREAK = '\n';
 const pathArchive = '/etc/hosts';
+const fs = require('fs');
 
 exports.post = async(req, res, next) => {
     
@@ -14,7 +15,8 @@ exports.post = async(req, res, next) => {
        
         await repository.create({
             name: req.body.name,
-            description: req.body.description
+            description: req.body.description,
+            storeId: req.body.storeId
 
         });
        
@@ -32,7 +34,17 @@ exports.post = async(req, res, next) => {
 exports.getAll = async(req, res, next) => {
     try {
         var data = await repository.get();  
-        data.shift();       
+        data.shift();
+
+        var fileContent = fs.readFileSync('/etc/hosts').toString();      
+        
+        for(var d in data) {   
+            const regex = new RegExp('\\b' + data[d].name + '\\b');
+            if (regex.test(fileContent)) {
+                data[d].setado = 'checked';                
+           }
+        }
+                
         res.status(200).send(data);
     } catch (e) {
         console.log(e);
@@ -80,10 +92,10 @@ exports.inject = async(req, res, next) => {
 
          }
 
-         var fs = require('fs');
+        
          fs.writeFileSync(pathArchive, description);
          var hostsReturn = fs.readFileSync(pathArchive).toString();
-       
+
         res.status(200).send({
             hostsReturn: hostsReturn
         });

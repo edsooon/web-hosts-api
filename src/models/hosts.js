@@ -13,6 +13,15 @@ const schema = new Schema({
         type: String,
         required: true,
         trim: true
+    },
+    storeId: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    setado: {
+        type: String,
+        default:''
     }
 });
 

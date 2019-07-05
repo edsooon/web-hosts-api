@@ -4,20 +4,22 @@ import styles from "./Index.module.css";
 
 export default class Menu extends Component {
 
-  state = { hosts:[], hostsReturn:''};
-  selectedHosts = {"hosts":[]};
+  state = { hosts:[], hostsReturn:'', stores:[]};
+  selectedHosts = {hosts:[]};
+  qtdChekbox = 0;
    
     async componentDidMount() {    
      
         try {
           const res = await this.callApi();
+          const resStores = await this.callApiStores();
     
-          if (res) {
+          if (res && resStores) {
             const styleLink = document.createElement("link");
             styleLink.rel = "stylesheet";
             styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
             document.head.appendChild(styleLink);
-            this.setState({hosts: res});
+            this.setState({hosts: res, stores: resStores});
             
           }
         } catch (e) {
@@ -32,38 +34,25 @@ export default class Menu extends Component {
     
         return body;
       };
-     
 
-
-    selectHost(param){
-
-     var exist = false;
-
-     if(this.selectedHosts.hosts.length === 0){
-       this.selectedHosts.hosts.push({"name": param});
-     } else {
-
-      for(var h in this.selectedHosts.hosts){
-                
-        if(this.selectedHosts.hosts[h].name === param){          
-          delete this.selectedHosts.hosts[h];
-          exist = true;
-        } 
-      }
-
-      if(!exist){
-        this.selectedHosts.hosts.push({"name": param});
-      }      
-
-     }    
-  }
+      callApiStores = async () => {
+        const response = await fetch('/stores');       
+        const body = await response.json();        
+        if (response.status !== 200) throw Error(body.message);
+    
+        return body;
+      };
 
   callApiInject = async () => {
 
     var hostsSelected = '';
-    
-    for(var h in this.selectedHosts.hosts){
-      hostsSelected = hostsSelected.concat(hostsSelected.length === 0 ? 'name='.concat(this.selectedHosts.hosts[h].name) : '&name='.concat(this.selectedHosts.hosts[h].name));
+
+    for(var i = 0; i < this.qtdChekbox - 1; i++){
+      var radio = document.getElementById('radio'+i);
+
+      if (radio != null && radio.checked){ 
+        hostsSelected = hostsSelected.concat(hostsSelected.length === 0 ? 'name='.concat(radio.value) : '&name='.concat(radio.value));
+      }
     }
     
     var url = '/hosts/inject?'.concat(hostsSelected);
@@ -87,22 +76,34 @@ export default class Menu extends Component {
      <div>
       <div className="card"> 
         <div className="card-header">
-            Selecionar Hosts
+            Select Hosts
         </div>
-        <div className={styles.container+" card-body"}>
-          <div className="row">       
-             {this.state.hosts.map((item, key) =>           
-               
-               <div className="col-sm-3"> 
-                  <div className="ui fitted slider checkbox" onClick={()=>this.selectHost(item.name)}>
-                     <input id={"radio"+key} type="checkbox" />                   
-                     <label></label>
-                  </div>
-                  <label>&nbsp;&nbsp;{item.name}</label>         
-               </div> 
+        <div className={" card-body"}>
+        {this.state.stores.map((store, key) => 
+            
+            <div className="card"> 
+              <div className="card-header">
+              {store.storeId}
+              </div>
+              <div className={"card-body"}>
 
-            )}
-          </div>
+              <div className="row">       
+                {this.state.hosts.map((item, key) =>           
+                   item.storeId === store.storeId &&                   
+                   <div className="col-sm-3"> 
+                      <div className="ui fitted slider checkbox">
+                        <input id={"radio"+key} type="checkbox" value={item.name} defaultChecked={item.setado}/>                                          
+                        <label><p hidden>{this.qtdChekbox++}</p></label>
+                      </div>
+                     <label>&nbsp;&nbsp;{item.name}</label>         
+                   </div>                   
+                )}
+              </div>
+
+              </div>
+            </div>
+        )}
+         
         </div>
         <div className="card-footer">
           <center>              
