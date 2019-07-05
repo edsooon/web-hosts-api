@@ -47,8 +47,8 @@ export default class Menu extends Component {
 
     var hostsSelected = '';
 
-    for(var i = 0; i < this.qtdChekbox - 1; i++){
-      var radio = document.getElementById('radio'+i);
+    for(var i = 0; i < this.qtdChekbox; i++){
+      var radio = await document.getElementById('radio'+i);
 
       if (radio != null && radio.checked){ 
         hostsSelected = hostsSelected.concat(hostsSelected.length === 0 ? 'name='.concat(radio.value) : '&name='.concat(radio.value));
