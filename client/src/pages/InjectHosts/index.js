@@ -82,8 +82,8 @@ export default class Menu extends Component {
         {this.state.stores.map((store, key) => 
             
             <div className="card"> 
-              <div className="card-header">
-              {store.storeId}
+              <div className="card bg-dark text-white card-header">
+              <b>{store.storeId}</b>
               </div>
               <div className={"card-body"}>
 
@@ -100,21 +100,20 @@ export default class Menu extends Component {
                 )}
               </div>
 
-              </div>
+              </div>              
             </div>
-        )}
-         
+        )}      
         </div>
         <div className="card-footer">
           <center>              
-              <button onClick={this.callApiInject} className="btn btn-success mr-2"><i className="fa fa-check"/>&nbsp;Inject Hosts</button>
-              <button onClick={this.goToPageHome}  className="btn btn-info"><i className="fa fa-home"/>&nbsp;Go To Home</button>
+              <button onClick={this.callApiInject} className={styles.buttons + " btn btn-success mr-2"}><i className="fa fa-check"/>&nbsp;Inject Hosts</button>
+              <button onClick={this.goToPageHome}  className={styles.buttons + " btn btn-primary"}><i className="fa fa-home"/>&nbsp;Go To Home</button>
           </center>
         </div>
       </div>
       <p/>
       <div className={this.state.hostsReturn === '' ? styles.hidden  : 'card'}> 
-        <div className="card-header">
+        <div className="card-header bg-secondary">
             Hosts
         </div>
         <div className=" card-body">             

@@ -12,6 +12,22 @@ exports.create = async(data) => {
     await host.save();
 }
 
+exports.update = async(id, data) => {
+    await Host
+        .findByIdAndUpdate(id, {
+            $set: {
+              name: data.name,
+              description: data.description,
+              storeId: data.storeId
+            }
+        });
+}
+
+exports.delete = async(id) => {
+    await Host
+        .findByIdAndDelete(id);
+}
+
 exports.getByName = async(name) => {
     const res = await Host
         .find({name: name});

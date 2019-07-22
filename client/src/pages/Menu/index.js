@@ -9,13 +9,17 @@ class App extends Component {
     this.props.history.push(`/inject`);
   }
 
+  goToPageManage = () => {     
+    this.props.history.push(`/manage`);
+  }
+
   render() {
     return (
         <div className="container">
             <div className="box">
                 <div className="row">
                     <div className="col-6">
-                        <button className="btn btn-primary buttonStyle">
+                        <button className="btn btn-primary buttonStyle" onClick={this.goToPageManage}>
                             <i className="fa fa-plus"/>&nbsp;
                             <i className="fa fa-edit"/>&nbsp;
                             <i className="fa fa-trash"/>
