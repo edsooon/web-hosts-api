@@ -1,6 +1,5 @@
-version: '3'
-services:
 version: '3.5'
+services:
 services:
   node:            
     image: edsonmelloof/web-hosts:latest
