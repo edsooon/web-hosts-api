@@ -2,12 +2,11 @@
 
 ## Requirements
 
-* Nodejs lasted version
-* Node Package Manager(npm) lasted version
+* docker lasted version
+* docker-compose lasted version
 
-## Instalation
+## Instalation no docker
 
-* Make the clone of this repository (https://github.com/edsooon/web-hosts-api.git) in a directory of your choice
-* Enter the project folder, open a new terminal and enter the command `sudo npm install`  to download the dependencies.
-* After downloading the dependencies, execute the `sudo npm run web-hosts` command to start the application
-* Open your brownser and enter url `localhost:3000`
+* Make the clone of this repository (https://github.com/edsooon/web-hosts-api.git) in a directory `/c/`
+* Enter the project folder, open a new terminal and enter the command `sudo docker-compose up`  to pull images docker and start application.
+* Open your brownser and enter url `localhost:8020`
