@@ -6,7 +6,7 @@ const HOST_PADRAO = 'PADRAO';
 const TITLE_SEPARATOR_LEFT = '#-------------------- '
 const TITLE_SEPARATOR_RIGHT = ' ---------------------'
 const LINE_BREAK = '\n';
-const pathArchive = '/etc/hosts';
+const pathArchive = '/path/hosts';
 const fs = require('fs');
 const ValidationContract = require('../validators/validator');
 
@@ -90,7 +90,7 @@ exports.getAll = async(req, res, next) => {
         var data = await repository.get();  
         data.shift();
 
-        var fileContent = fs.readFileSync('/etc/hosts').toString();      
+        var fileContent = fs.readFileSync(pathArchive).toString();      
         
         for(var d in data) {   
             const regex = new RegExp('\\b' + data[d].name + '\\b');
