@@ -6,4 +6,4 @@ services:
     volumes:
        - /etc:/path
     ports:
-      - "8020:3000"
+      - "8020:3000" 
