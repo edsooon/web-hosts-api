@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import styles from "./Index.module.css";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Alert from 'reactstrap/lib/Alert';
 
 export default class Menu extends Component {
 
-  state = { hosts:[], hostsReturn:'', stores:[]};
+  state = { hosts:[], hostsReturn:'', stores:[], open: false, visible: false, statusMessage:[ { color: '', messages: [] } ]};
   selectedHosts = {hosts:[]};
   qtdChekbox = 0;
    
@@ -59,15 +61,35 @@ export default class Menu extends Component {
     const response = await fetch(url);         
     const body = await response.json();
         
-    if (response.status !== 200) throw Error(body.message);       
-   
+    if (response.status !== 200) throw Error(body.message);
+    
+    this.setState({ statusMessage: [ { color: 'success', messages: [ { msg: 'Hosts successfully injected!' } ] } ] });   
     this.setState({hostsReturn: body.hostsReturn});
+    this.onOpenModal();
+    this.onShowAlert();
   
   };
+
+  onShowAlert = ()=>{
+    this.setState({visible:true},()=>{
+      window.setTimeout(()=>{
+        this.setState({visible:false})
+      },5000)
+    });
+  }
 
   goToPageHome = () => {     
     this.props.history.push(``);
   }
+
+
+  onOpenModal = async (row) => {  
+    this.setState({ open: true });   
+  };
+
+  onCloseModal = () => {
+    this.setState({ open: false });           
+  };
   
   
   render() {
@@ -112,17 +134,27 @@ export default class Menu extends Component {
         </div>
       </div>
       <p/>
-      <div className={this.state.hostsReturn === '' ? styles.hidden  : 'card'}> 
-        <div className="card-header bg-secondary">
-            Hosts
-        </div>
-        <div className=" card-body">             
-              <div className="form-group">  
+
+      <Modal fade size='lg' centered isOpen={this.state.open} className={this.props.className}>
+          <ModalHeader>{'Hosts Injetcted'}</ModalHeader>
+          <ModalBody>
+          <Alert color={this.state.statusMessage[0].color}  isOpen={this.state.visible} >
+            {this.state.statusMessage[0].messages.map((item, key) =>
+                   <div className="row">
+                      <label>{'• ' + item.msg}<br/></label>
+                   </div>
+              )}             
+          </Alert>
+          <form>
+            <div className="form-group">  
                <textarea className="form-control rounded-0" id="exampleFormControlTextarea1" rows="20" value={this.state.hostsReturn}></textarea>
-              </div>
-        </div>
-        <div className="card-footer"></div>
-      </div>
+            </div>
+          </form>
+          </ModalBody>
+          <ModalFooter>            
+            <button onClick={this.onCloseModal} className={styles.buttons + " btn btn-secondary"}><i className={"fa fa-remove"}></i> Close</button>
+          </ModalFooter>
+        </Modal>
 
     </div>
 

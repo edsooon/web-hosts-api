@@ -1,3 +1,11 @@
+body {
+  background: url('https://www.our-voices.org.uk/assets/images/Network-diagram.png') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 .containerhosts {
   width: 100vw;
   height: 100vh;  
@@ -17,5 +25,9 @@
 
 .buttons {
   width: 200px; 
+}
+
+.boxtransparent {
+  background-color: transparent;
 }
 

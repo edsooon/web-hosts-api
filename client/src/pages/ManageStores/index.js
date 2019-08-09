@@ -7,19 +7,17 @@ import Alert from 'reactstrap/lib/Alert';
 import styles from "./Manage.module.css";
 
 
-
 export default class Index extends Component {
 
-  state = { hosts:[], host:'', stores:[], open: false, visible: false, statusMessage:[ { color: '', messages: [] } ], edit: false, confirm: false, selectValue: 'select'};
+  state = { store:'', stores:[], open: false, visible: false, statusMessage:[ { color: '', messages: [] } ], edit: false, confirm: false};
   
     async componentDidMount() {    
      
         try {
-          const res = await this.callApi();
+         
           const resStores = await this.callApiStores();
                         
-          if (res && resStores) {                   
-            this.setState({hosts: res});  
+          if (resStores) {    
             this.setState({stores: resStores});                       
           }
         } catch (e) {
@@ -27,14 +25,7 @@ export default class Index extends Component {
         }
       }
 
-      callApi = async () => {
-        const response = await fetch('/hosts/all');       
-        const body = await response.json();        
-        if (response.status !== 200) throw Error(body.message);
-    
-        return body;
-      };
-
+     
       callApiStores = async () => {
         const response = await fetch('/stores');       
         const body = await response.json();        
@@ -43,16 +34,14 @@ export default class Index extends Component {
         return body;
       };
 
-      updateHost = async () => {
+      updateStore = async () => {
 
-        this.state.host.name = document.getElementById('nameHost').value;
-        this.state.host.storeId = this.state.selectValue;
-        this.state.host.description = document.getElementById('description').value;
-        
-        const response = await fetch('/hosts/'+ this.state.host._id, 
+        this.state.store.storeId = document.getElementById('store').value;
+               
+        const response = await fetch('/stores/'+ this.state.store._id, 
           {
             method: 'PUT',
-            body: JSON.stringify(this.state.host),
+            body: JSON.stringify(this.state.store),
             headers: {
             'Content-Type': 'application/json'
                                       }
@@ -61,7 +50,7 @@ export default class Index extends Component {
           const body = await response.json();         
                          
         if (response.status === 200){
-          this.setState({ statusMessage: [ { color: 'success', messages: [ { msg: this.state.host.name + ' host successfully edited!' } ] } ] });
+          this.setState({ statusMessage: [ { color: 'success', messages: [ { msg: this.state.store.storeId + ' store successfully edited!' } ] } ] });
           this.onShowAlert(); 
             
         } else { 
@@ -75,15 +64,13 @@ export default class Index extends Component {
 
       };
 
-      newHost = async () => {
+      newStore= async () => {
        
         let data = {
-          name: document.getElementById('nameHost').value,
-          description: document.getElementById('description').value,
-          storeId: this.state.selectValue
+          storeId: document.getElementById('store').value         
         }
 
-        const response = await fetch('/hosts/', 
+        const response = await fetch('/stores/', 
           {
             method: 'POST',
             body: JSON.stringify(data),
@@ -96,7 +83,7 @@ export default class Index extends Component {
         
         if (response.status === 201){          
           
-          this.setState({ statusMessage: [ { color: 'success', messages: [ { msg: data.name + ' host successfully created!' } ] } ] });         
+          this.setState({ statusMessage: [ { color: 'success', messages: [ { msg: data.storeId + ' store successfully created!' } ] } ] });         
           this.onShowAlert();
           this.componentDidMount();
             
@@ -120,17 +107,16 @@ export default class Index extends Component {
         return (errorsMessages);
       }
 
-      deleteHost = async () => {
+      deleteStore = async () => {
         this.onCloseConfirmDelete();       
-        const response = await fetch('/hosts/'+ this.state.host._id, 
+        const response = await fetch('/stores/'+ this.state.store._id, 
           {
             method: 'DELETE'
           });
 
-        
-                                        
+                                                
         if (response.status === 204){          
-          this.setState({ statusMessage: [ { color: 'success', messages: [ { msg: this.state.host.name + ' host successfully removed!' } ] } ] });   
+          this.setState({ statusMessage: [ { color: 'success', messages: [ { msg: this.state.store.idStore + ' store successfully removed!' } ] } ] });   
           this.onShowAlert();
           this.componentDidMount();
             
@@ -146,7 +132,7 @@ export default class Index extends Component {
       };
 
       onOpenConfirmDelete = (row) => {     
-        this.setState({ host: row });
+        this.setState({ store: row });
         this.setState({ confirm: true });
       }
 
@@ -154,10 +140,9 @@ export default class Index extends Component {
         this.setState({ confirm: false });
       }
 
-      newHostClearFields = () => {   
-        document.getElementById('nameHost').value = '';
-        this.setState( {selectValue: 'select'} );
-        document.getElementById('description').value = '';
+      newStoreClearFields = () => {   
+        document.getElementById('store').value = '';
+        
       }
            
       goToPageHome = () => {     
@@ -170,11 +155,11 @@ export default class Index extends Component {
      
         return (
           <center>
-            <button className='btn btn-primary' title={'Editar ' + row.name} type="button" onClick={() => 
+            <button className='btn btn-primary' title={'Editar ' + row.storeId} type="button" onClick={() => 
               this.onOpenModal(row)}>
               <i className='fa fa-pencil'/>
             </button> {' '}
-            <button className='btn btn-danger' title={'Deletar ' + row.name} type="button" onClick={() => 
+            <button className='btn btn-danger' title={'Deletar ' + row.storeId} type="button" onClick={() => 
               this.onOpenConfirmDelete(row)}>
               <i className='fa fa-trash'/>
             </button>
@@ -184,7 +169,7 @@ export default class Index extends Component {
 
       onOpenModal = async (row) => {
         this.setState({ selectValue: row.storeId });  
-        this.setState({ host: row });       
+        this.setState({ store: row });       
         this.setState({ open: true });        
         this.setState({ edit: true });                
       };
@@ -196,14 +181,13 @@ export default class Index extends Component {
 
       onCloseModal = () => {
         this.setState({ open: false });
-        this.setState({ edit: false });
-        this.setState({ selectValue: 'select' });
+        this.setState({ edit: false });        
       };
 
       setFieldsEdit = () => {
         if(this.state.edit){       
-          document.getElementById('nameHost').value = this.state.host.name;          
-          document.getElementById('description').value = this.state.host.description;
+          document.getElementById('store').value = this.state.store.storeId;          
+         
         }
       };
 
@@ -227,18 +211,17 @@ export default class Index extends Component {
      <div> 
 
         <div className="card">
-          <div className="card-header">Hosts</div>
+          <div className="card-header">Stores</div>
           <div className="card-body">
-            <BootstrapTable condensed pagination search striped hover data={this.state.hosts} version='4'> 
-              <TableHeaderColumn isKey={true} hidden dataField="_id">ID</TableHeaderColumn>             
-              <TableHeaderColumn dataAlign="center" dataField='name'>Host Name</TableHeaderColumn>              
-              <TableHeaderColumn dataAlign="center" width={'30%'} dataField='storeId'>Store</TableHeaderColumn>
+            <BootstrapTable condensed pagination search striped hover data={this.state.stores} version='4'> 
+              <TableHeaderColumn isKey={true} hidden dataField="_id">ID</TableHeaderColumn>  
+              <TableHeaderColumn dataAlign="center"dataField='storeId'>Store</TableHeaderColumn>
               <TableHeaderColumn width={'10%'} dataAlign="center" dataField='button' dataFormat={this.cellButton.bind(this)}>Action</TableHeaderColumn>
             </BootstrapTable>
           </div>
           <div className="card-footer">
             <center>
-                <button className={styles.buttons + " btn btn-success mr-2"} onClick={this.onOpenModalNew}><i className="fa fa-plus"></i> New Host</button>{' '}
+                <button className={styles.buttons + " btn btn-success mr-2"} onClick={this.onOpenModalNew}><i className="fa fa-plus"></i> New Store</button>{' '}
                 <button className={styles.buttons + " btn btn-primary mr-2"} onClick={this.goToPageHome}><i className="fa fa-home"></i> Go To Home</button>
             </center> 
           </div>
@@ -246,7 +229,7 @@ export default class Index extends Component {
      
         <div>       
         <Modal onOpened={this.setFieldsEdit} fade size='lg' centered isOpen={this.state.open} className={this.props.className}>
-          <ModalHeader>{this.state.edit ? 'Edit Host' : 'New'}</ModalHeader>
+          <ModalHeader>{this.state.edit ? 'Edit Store' : 'New'}</ModalHeader>
           <ModalBody>
           <Alert color={this.state.statusMessage[0].color}  isOpen={this.state.visible} >
             {this.state.statusMessage[0].messages.map((item, key) =>
@@ -259,38 +242,17 @@ export default class Index extends Component {
             <div className="row">
               <div className="col-sm-8">
                 <div className="form-group">
-                  <label><b>Name Host</b></label>
-                  <input id="nameHost" className="form-control" />   
+                  <label><b>Store</b></label>
+                  <input id="store" className="form-control" />   
                 </div>                
               </div> 
-
-              <div className="col-sm-4">
-                <div className="form-group">
-                  <label><b>Store</b></label>
-                  <select value={this.state.selectValue} id="store" onChange={this.onChange.bind(this)} className="form-control">
-                     <option value="select">Select an Option</option>
-                     {this.state.stores.map((item, key) =>
-                          <option value={item.storeId}>{item.storeId}</option>
-                     )}                     
-                  </select>   
-                </div>                
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-sm-12">
-                <div className="form-group">
-                  <label><b>Host</b></label>
-                  <textarea  id="description" rows="5" className="form-control"/>   
-                </div>                
-              </div>
             </div>
           </form>
           </ModalBody>
           <ModalFooter>
-            <button className={!this.state.edit ? styles.buttons + ' btn btn-success' : styles.hidden} onClick={this.newHostClearFields}><i className="fa fa-plus"></i> New Host</button>{' '}
-            <button className={!this.state.edit ? styles.buttons + ' btn btn-primary' : styles.hidden} onClick={this.newHost}><i className="fa fa-save"></i> Save New</button>{' '}
-            <button className={this.state.edit ? styles.buttons + ' btn btn-primary' : styles.hidden} onClick={this.updateHost}><i className="fa fa-save"></i> Save</button>{' '}
+            <button className={!this.state.edit ? styles.buttons + ' btn btn-success' : styles.hidden} onClick={this.newStoreClearFields}><i className="fa fa-plus"></i> New Store</button>{' '}
+            <button className={!this.state.edit ? styles.buttons + ' btn btn-primary' : styles.hidden} onClick={this.newStore}><i className="fa fa-save"></i> Save New</button>{' '}
+            <button className={this.state.edit ? styles.buttons + ' btn btn-primary' : styles.hidden} onClick={this.updateStore}><i className="fa fa-save"></i> Save</button>{' '}
             <button onClick={this.onCloseModal} className={styles.buttons + " btn btn-secondary"}><i className={"fa fa-remove"}></i> Close</button>
           </ModalFooter>
         </Modal>
@@ -300,10 +262,10 @@ export default class Index extends Component {
           <Modal fade size='md' centered isOpen={this.state.confirm} className={this.props.className}>
             <ModalHeader>Delete</ModalHeader>
             <ModalBody>
-                <label>Do you want to remove host <b>{this.state.host.name}</b> ?</label>
+                <label>Do you want to remove store <b>{this.state.store.storeId}</b> ?</label>
             </ModalBody>
             <ModalFooter>
-              <Button color="success"   onClick={this.deleteHost}><i className="fa fa-check"></i> Sim</Button>{' '}
+              <Button color="success"   onClick={this.deleteStore}><i className="fa fa-check"></i> Sim</Button>{' '}
               <Button color="secondary" onClick={this.onCloseConfirmDelete}><i className="fa fa-remove"></i> Não</Button>
             </ModalFooter>
           </Modal>

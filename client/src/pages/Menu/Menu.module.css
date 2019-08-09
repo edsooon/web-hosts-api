@@ -1,16 +1,15 @@
-.App {
-  text-align: center;
+body {
+  background: url('https://www.our-voices.org.uk/assets/images/Network-diagram.png') no-repeat center center fixed !important; 
+  -webkit-background-size: cover !important;
+  -moz-background-size: cover !important;
+  -o-background-size: cover !important;
+  background-size: cover !important;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.container {
+.container { 
+  background-color: transparent;
   width: 100vw;
-  height: 100vh;  
+  height: 50vh;  
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -18,6 +17,7 @@
 }
 
 .box {
+  background-color: transparent;
   width: 500px;
   height: 300px;
   background: #fff;
@@ -30,26 +30,7 @@
 
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.boxtransparent {
+  background-color: transparent;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
